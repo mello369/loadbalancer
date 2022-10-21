@@ -8,13 +8,22 @@ import (
 	"github.com/mello369/loadbalancer/models"
 )
 
-func NewSimpleServer(addr string) *SimpleServer {
+func NewSimpleServer(addr string) *models.SimpleServer {
 	serverUrl, err := url.Parse(addr)
 	HandleError(err)
 	return &models.SimpleServer{
-		address: addr,
-		proxy:   httputil.NewSingleHostReverseProxy(serverUrl),
+		Address: addr,
+		Proxy:   httputil.NewSingleHostReverseProxy(serverUrl),
 	}
+}
+
+func NewLoadBalancer(port string, servers []models.Server) *models.LoadBalancer {
+	return &models.LoadBalancer{
+		Port:            port,
+		Servers:         servers,
+		RoundRobinCount: 0,
+	}
+
 }
 
 func HandleError(err error) {
